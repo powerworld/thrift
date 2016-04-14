@@ -22,7 +22,7 @@
  * is different for the non-POSIX MinGW
  */
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__BORLANDC__)
 #include "windows/config.h"
 #endif
 

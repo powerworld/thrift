@@ -20,6 +20,7 @@
 
 #include "t_typedef.h"
 #include "t_program.h"
+#include "platform.h"
 
 t_type* t_typedef::get_type() const {
   if (type_ == NULL) {

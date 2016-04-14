@@ -38,7 +38,7 @@
 #pragma GCC diagnostic ignored "-Wunused-label"
 #endif
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__BORLANDC__)
 //warning C4102: 'find_rule' : unreferenced label
 #pragma warning(disable:4102)
 //avoid isatty redefinition
@@ -52,7 +52,7 @@
 #include <errno.h>
 #include <stdlib.h>
 
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__BORLANDC__)
 #include "windows/config.h"
 #endif
 #include "main.h"

@@ -16,6 +16,8 @@
 *.jar
 *.exe
 *.dll
+*.res
+*.cbproj.local
 *_ReSharper*
 *.opensdf
 *.swp
@@ -49,6 +51,8 @@ erl_crash.dump
 /autoscan-*.log
 /compiler/cpp/Debug
 /compiler/cpp/Release
+/compiler/cpp/Win32
+/compiler/cpp/Win64
 /compiler/cpp/libparse.a
 /compiler/cpp/src/thriftl.cc
 /compiler/cpp/src/thrifty.cc
@@ -61,6 +65,7 @@ erl_crash.dump
 /compiler/cpp/thrifty.h
 /compiler/cpp/thrifty.hh
 /compiler/cpp/version.h
+/compiler/cpp/thrift.stat
 /config.*
 /configure
 /configure.lineno

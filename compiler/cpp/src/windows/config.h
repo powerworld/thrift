@@ -32,14 +32,19 @@
 #include <stdlib.h>
 #include <direct.h>
 
-#define strtoll(begin_ptr, end_ptr, length) _strtoi64(begin_ptr, end_ptr, length)
 
 #define PRIu64 "I64d"
 #define PRIi64 "I64d"
+
+#ifdef _MSC_VER
+
+#define strtoll(begin_ptr, end_ptr, length) _strtoi64(begin_ptr, end_ptr, length)
 
 // squelch deprecation warnings
 #pragma warning(disable : 4996)
 // squelch bool conversion performance warning
 #pragma warning(disable : 4800)
+
+#endif // _MSC_VER
 
 #endif // _THRIFT_WINDOWS_CONFIG_H_

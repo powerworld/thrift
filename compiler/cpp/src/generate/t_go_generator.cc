@@ -2522,7 +2522,7 @@ void t_go_generator::generate_service_remote(t_service* tservice) {
   // Close service file
   f_remote.close();
   format_go_output(f_remote_name);
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
   // Make file executable, love that bitwise OR action
   chmod(f_remote_name.c_str(),
         S_IRUSR | S_IWUSR | S_IXUSR

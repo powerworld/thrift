@@ -28,13 +28,13 @@
 #define __STDC_LIMIT_MACROS
 #define __STDC_FORMAT_MACROS
 #include <stdio.h>
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <inttypes.h>
 #else
 #include <stdint.h>
 #endif
 #include <limits.h>
-#ifdef _MSC_VER
+#if defined(_MSC_VER) || defined(__BORLANDC__)
 #include "windows/config.h"
 #endif
 #include "main.h"
