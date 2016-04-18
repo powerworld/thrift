@@ -124,6 +124,9 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <CppCompile Include="src\generate\t_c_glib_generator.cc">
             <BuildOrder>17</BuildOrder>
         </CppCompile>
+        <CppCompile Include="src\generate\t_dart_generator.cc">
+            <BuildOrder>64</BuildOrder>
+        </CppCompile>
         <CppCompile Include="src\generate\t_delphi_generator.cc">
             <BuildOrder>22</BuildOrder>
         </CppCompile>
@@ -137,10 +140,10 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <BuildOrder>24</BuildOrder>
         </CppCompile>
         <None Include="src\generate\t_generator.h">
-            <BuildOrder>25</BuildOrder>
+            <BuildOrder>64</BuildOrder>
         </None>
         <None Include="src\generate\t_generator_registry.h">
-            <BuildOrder>26</BuildOrder>
+            <BuildOrder>64</BuildOrder>
         </None>
         <CppCompile Include="src\generate\t_go_generator.cc">
             <BuildOrder>27</BuildOrder>
@@ -158,7 +161,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <BuildOrder>31</BuildOrder>
         </CppCompile>
         <None Include="src\generate\t_html_generator.h">
-            <BuildOrder>32</BuildOrder>
+            <BuildOrder>64</BuildOrder>
         </None>
         <CppCompile Include="src\generate\t_javame_generator.cc">
             <BuildOrder>34</BuildOrder>
@@ -179,7 +182,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
             <BuildOrder>38</BuildOrder>
         </CppCompile>
         <None Include="src\generate\t_oop_generator.h">
-            <BuildOrder>39</BuildOrder>
+            <BuildOrder>64</BuildOrder>
         </None>
         <CppCompile Include="src\generate\t_perl_generator.cc">
             <BuildOrder>40</BuildOrder>
@@ -195,6 +198,12 @@ $(PreBuildEvent)]]></PreBuildEvent>
         </CppCompile>
         <CppCompile Include="src\generate\t_st_generator.cc">
             <BuildOrder>44</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\generate\t_swift_generator.cc">
+            <BuildOrder>65</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\generate\t_xml_generator.cc">
+            <BuildOrder>66</BuildOrder>
         </CppCompile>
         <CppCompile Include="src\generate\t_xsd_generator.cc">
             <BuildOrder>45</BuildOrder>
@@ -387,16 +396,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="DependencyModule">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.dll;.bpl</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
                 <DeployClass Name="ProjectOSXResource">
                     <Platform Name="OSX32">
                         <RemoteDir>Contents\Resources</RemoteDir>
@@ -710,7 +710,16 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
+                <DeployClass Name="DependencyModule">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.dll;.bpl</Extensions>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
