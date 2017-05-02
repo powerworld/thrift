@@ -33,8 +33,13 @@
 #include <direct.h>
 
 
-#define PRIu64 "I64d"
-#define PRIi64 "I64d"
+#ifndef PRIu64
+#define PRIu64 "I64u"
+#endif
+
+#ifndef PRIi64
+#define PRIi64 "I64i"
+#endif
 
 #ifdef _MSC_VER
 

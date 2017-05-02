@@ -1,3 +1,6 @@
+%code requires {
+#include "thrift/parse/t_program.h"
+}
 %{
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,8 +28,12 @@
  *
  */
 
+#ifndef __STDC_LIMIT_MACROS
 #define __STDC_LIMIT_MACROS
+#endif
+#ifndef __STDC_FORMAT_MACROS
 #define __STDC_FORMAT_MACROS
+#endif
 #include <stdio.h>
 #if !defined(_MSC_VER) && !defined(__BORLANDC__)
 #include <inttypes.h>
