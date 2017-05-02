@@ -16,15 +16,32 @@
 # specific language governing permissions and limitations
 # under the License.
 #
-
-
-#  PIP_FOUND - system has pip
-#  PIP_EXECUTABLE - the pip executable
 #
-# It will search the PATH environment variable
+# Contains some contributions under the Thrift Software License.
+# Please see doc/old-thrift-license.txt in the Thrift distribution for
+# details.
 
-include(FindPackageHandleStandardArgs)
+AUTOMAKE_OPTIONS = subdir-objects
 
-find_program(PIP_EXECUTABLE NAMES pip)
-find_package_handle_standard_args(PIP DEFAULT_MSG PIP_EXECUTABLE)
-mark_as_advanced(PIP_EXECUTABLE)
+if WITH_PLUGIN
+plugin_gen = plugin_types.h \
+             plugin_types.cpp \
+             plugin_constants.h \
+             plugin_constants.cpp
+
+BUILT_SOURCES = $(plugin_gen)
+gen.stamp: plugin.thrift $(top_builddir)/compiler/cpp/src/thrift-bootstrap
+	@$(RM) -f gen.tmp
+	@touch gen.tmp
+	$(top_builddir)/compiler/cpp/src/thrift-bootstrap -gen cpp -out . $<
+	@mv -f gen.tmp $@
+
+$(plugin_gen): gen.stamp
+	@if test -f $@; then :; else \
+	$(RM) -f gen.stamp; \
+	$(MAKE) $(AM_MAKEFLAGS) gen.stamp; \
+	fi
+
+clean-local:
+	$(RM) version.h windows/version.h $(plugin_gen)
+endif

@@ -1634,6 +1634,9 @@ void t_go_generator::generate_go_struct_writer(ofstream& out,
   t_field::e_req field_required;
   int32_t field_id = -1;
 
+  out << indent() << "if p != nil {" << endl;
+  indent_up();
+
   for (f_iter = fields.begin(); f_iter != fields.end(); ++f_iter) {
     string field_method_prefix("writeField");
     field_name = (*f_iter)->get_name();
@@ -1649,6 +1652,9 @@ void t_go_generator::generate_go_struct_writer(ofstream& out,
     out << indent() << "if err := p." << field_method_prefix << field_method_suffix
         << "(oprot); err != nil { return err }" << endl;
   }
+
+  indent_down();
+  out << indent() << "}" << endl;
 
   // Write the struct map
   out << indent() << "if err := oprot.WriteFieldStop(); err != nil {" << endl;
@@ -3650,6 +3656,14 @@ string t_go_generator::type_to_spec_args(t_type* ttype) {
 }
 
 bool format_go_output(const string& file_path) {
+
+  // formatting via gofmt deactivated due to THRIFT-3893
+  // Please look at the ticket and make sure you fully understand all the implications
+  // before submitting a patch that enables this feature again. Thank you.
+  (void) file_path;
+  return false;
+  
+  /*
   const string command = "gofmt -w " + file_path;
 
   if (system(command.c_str()) == 0) {
@@ -3658,7 +3672,8 @@ bool format_go_output(const string& file_path) {
 
   fprintf(stderr, "WARNING - Running '%s' failed.\n", command.c_str());
   return false;
-}
+  */
+ }
 
 THRIFT_REGISTER_GENERATOR(go, "Go",
                           "    package_prefix=  Package prefix for generated files.\n" \

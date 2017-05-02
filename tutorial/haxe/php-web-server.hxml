@@ -1,5 +1,3 @@
-#!/bin/sh
-
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements. See the NOTICE file
@@ -18,13 +16,28 @@
 # specific language governing permissions and limitations
 # under the License.
 #
+ 
+#integrate files to classpath
+-cp src
+-cp gen-haxe
+-cp ../../lib/haxe/src
 
-../../../../compiler/cpp/thrift --gen csharp -o . ../../../../test/ThriftTest.thrift
-gmcs /t:library /out:./ThriftImpl.dll /recurse:./gen-csharp/* /reference:../../Thrift.dll
-gmcs  /out:TestClientServer.exe /reference:../../Thrift.dll /reference:ThriftImpl.dll TestClient.cs TestServer.cs Program.cs
+#this class wil be used as entry point for your app.
+-main Main
 
-export MONO_PATH=../../
+#PHP target
+-php bin/php-web-server/
+--php-front Main-debug.php
 
-timeout 120 ./TestClientServer.exe server &
-sleep 1
-./TestClientServer.exe client
+#defines
+-D phpwebserver
+
+
+#Add debug information
+-debug
+
+#dead code elimination : remove unused code
+#"-dce no" : do not remove unused code
+#"-dce std" : remove unused code in the std lib (default)
+#"-dce full" : remove all unused code
+-dce full

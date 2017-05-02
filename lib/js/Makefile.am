@@ -17,20 +17,11 @@
 # under the License.
 #
 
-THRIFT = $(top_builddir)/compiler/cpp/thrift
-if MONO_MCS
-CSC=mcs
-else
-CSC=gmcs
-endif
+# Make sure this doesn't fail if ant is not configured.
 
-stubs: $(top_srcdir)/test/ThriftTest.thrift
-	$(THRIFT) --gen csharp -o . $(top_srcdir)/test/ThriftTest.thrift
+SUBDIRS = test
 
-precross: TestClientServer.exe
+check-local: all
+	npm install
+	./node_modules/.bin/grunt
 
-ThriftImpl.dll: stubs
-	$(CSC) /t:library /out:./ThriftImpl.dll /recurse:./gen-csharp/Thrift/Test/*.cs /reference:../../Thrift.dll
-
-TestClientServer.exe: TestClient.cs TestServer.cs Program.cs ThriftImpl.dll
-	$(CSC)  /out:TestClientServer.exe /reference:../../Thrift.dll /reference:ThriftImpl.dll TestClient.cs TestServer.cs Program.cs
