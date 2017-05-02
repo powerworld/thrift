@@ -107,6 +107,7 @@ project.lock.json
 /lib/cpp/src/thrift/stamp-h2
 /lib/cpp/test/Benchmark
 /lib/cpp/test/AllProtocolsTest
+/lib/cpp/test/AnnotationTest
 /lib/cpp/test/DebugProtoTest
 /lib/cpp/test/DenseProtoTest
 /lib/cpp/test/EnumTest
@@ -155,6 +156,7 @@ project.lock.json
 /lib/c_glib/test/testframedtransport
 /lib/c_glib/test/testmemorybuffer
 /lib/c_glib/test/testoptionalrequired
+/lib/c_glib/test/testtransportsslsocket
 /lib/c_glib/test/testsimpleserver
 /lib/c_glib/test/teststruct
 /lib/c_glib/test/testthrifttest
@@ -220,6 +222,8 @@ project.lock.json
 /lib/haxe/test/bin
 /lib/hs/dist
 /lib/java/build
+/lib/js/dist
+/lib/js/doc
 /lib/js/test/build
 /lib/netcore/**/.vs
 /lib/netcore/**/bin

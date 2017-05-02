@@ -178,8 +178,7 @@ public:
                                   bool inclass = false,
                                   bool coerceData = false,
                                   bool inkey = false,
-                                  bool in_container = false,
-                                  bool use_true_type = false);
+                                  bool in_container = false);
 
   void generate_deserialize_struct(std::ofstream& out,
                                    t_struct* tstruct,
@@ -330,7 +329,7 @@ bool t_go_generator::omit_initialization(t_field* tfield) {
       throw "";
 
     case t_base_type::TYPE_STRING:
-      if (((t_base_type*)type)->is_binary()) {
+      if (type->is_binary()) {
         //[]byte are always inline
         return false;
       }
@@ -358,7 +357,7 @@ bool t_go_generator::omit_initialization(t_field* tfield) {
 static bool type_need_reference(t_type* type) {
   type = type->get_true_type();
   if (type->is_map() || type->is_set() || type->is_list() || type->is_struct()
-      || type->is_xception() || (type->is_string() && ((t_base_type*)type)->is_binary())) {
+      || type->is_xception() || type->is_binary()) {
     return false;
   }
   return true;
@@ -388,7 +387,7 @@ bool t_go_generator::is_pointer_field(t_field* tfield, bool in_container_value) 
       throw "";
 
     case t_base_type::TYPE_STRING:
-      if (((t_base_type*)type)->is_binary()) {
+      if (type->is_binary()) {
         //[]byte are always inline
         return false;
       }
@@ -882,6 +881,7 @@ string t_go_generator::go_imports_begin(bool consts) {
   return string(
       "import (\n"
       "\t\"bytes\"\n"
+      "\t\"reflect\"\n"
       + extra +
       "\t\"fmt\"\n"
       "\t\"" + gen_thrift_import_ + "\"\n");
@@ -890,7 +890,7 @@ string t_go_generator::go_imports_begin(bool consts) {
 /**
  * End the import statement, include undscore-assignments
  *
- * These "_ =" prevent the go compiler complaining about used imports.
+ * These "_ =" prevent the go compiler complaining about unused imports.
  * This will have to do in lieu of more intelligent import statement construction
  */
 string t_go_generator::go_imports_end() {
@@ -899,6 +899,7 @@ string t_go_generator::go_imports_end() {
       "// (needed to ensure safety because of naive import list construction.)\n"
       "var _ = thrift.ZERO\n"
       "var _ = fmt.Printf\n"
+      "var _ = reflect.DeepEqual\n"
       "var _ = bytes.Equal\n\n");
 }
 
@@ -1063,7 +1064,7 @@ string t_go_generator::render_const_value(t_type* type, t_const_value* value, co
 
     switch (tbase) {
     case t_base_type::TYPE_STRING:
-      if (((t_base_type*)type)->is_binary()) {
+      if (type->is_binary()) {
         out << "[]byte(\"" << get_escaped_string(value) << "\")";
       } else {
         out << '"' << get_escaped_string(value) << '"';
@@ -1155,12 +1156,12 @@ string t_go_generator::render_const_value(t_type* type, t_const_value* value, co
   } else if (type->is_set()) {
     t_type* etype = ((t_set*)type)->get_elem_type();
     const vector<t_const_value*>& val = value->get_list();
-    out << "map[" << type_to_go_key_type(etype) << "]struct{}{" << endl;
+    out << "[]" << type_to_go_key_type(etype) << "{" << endl;
     indent_up();
     vector<t_const_value*>::const_iterator v_iter;
 
     for (v_iter = val.begin(); v_iter != val.end(); ++v_iter) {
-      out << indent() << render_const_value(etype, *v_iter, name) << ": struct{}{}," << endl;
+      out << indent() << render_const_value(etype, *v_iter, name) << ", ";
     }
 
     indent_down();
@@ -1404,7 +1405,7 @@ void t_go_generator::generate_isset_helpers(ofstream& out,
           << endl;
       indent_up();
       t_type* ttype = (*f_iter)->get_type()->get_true_type();
-      bool is_byteslice = ttype->is_base_type() && ((t_base_type*)ttype)->is_binary();
+      bool is_byteslice = ttype->is_binary();
       bool compare_to_nil_only = ttype->is_set() || ttype->is_list() || ttype->is_map()
                                  || (is_byteslice && !(*f_iter)->get_value());
       if (is_pointer_field(*f_iter) || compare_to_nil_only) {
@@ -2335,7 +2336,7 @@ void t_go_generator::generate_service_remote(t_service* tservice) {
           break;
 
         case t_base_type::TYPE_STRING:
-          if (((t_base_type*)the_type2)->is_binary()) {
+          if (the_type2->is_binary()) {
             f_remote << indent() << "argvalue" << i << " := []byte(flag.Arg(" << flagArg << "))"
                      << endl;
           } else {
@@ -2828,8 +2829,7 @@ void t_go_generator::generate_deserialize_field(ofstream& out,
                                                 bool inclass,
                                                 bool coerceData,
                                                 bool inkey,
-                                                bool in_container_value,
-                                                bool use_true_type) {
+                                                bool in_container_value) {
   (void)inclass;
   (void)coerceData;
   t_type* orig_type = tfield->get_type();
@@ -2851,10 +2851,8 @@ void t_go_generator::generate_deserialize_field(ofstream& out,
   } else if (type->is_base_type() || type->is_enum()) {
 
     if (declare) {
-      t_type* actual_type = use_true_type ? tfield->get_type()->get_true_type()
-                                          : tfield->get_type();
-
-      string type_name = inkey ? type_to_go_key_type(actual_type) : type_to_go_type(actual_type);
+      string type_name = inkey ? type_to_go_key_type(tfield->get_type())
+                               : type_to_go_type(tfield->get_type());
 
       out << "var " << tfield->get_name() << " " << type_name << endl;
     }
@@ -2870,7 +2868,7 @@ void t_go_generator::generate_deserialize_field(ofstream& out,
         break;
 
       case t_base_type::TYPE_STRING:
-        if (((t_base_type*)type)->is_binary() && !inkey) {
+        if (type->is_binary() && !inkey) {
           out << "ReadBinary()";
         } else {
           out << "ReadString()";
@@ -2916,7 +2914,7 @@ void t_go_generator::generate_deserialize_field(ofstream& out,
     out << "} else {" << endl;
     string wrap;
 
-    if (type->is_enum() || (orig_type->is_typedef() && !use_true_type)) {
+    if (type->is_enum() || orig_type->is_typedef()) {
       wrap = publicize(type_name(orig_type));
     } else if (((t_base_type*)type)->get_base() == t_base_type::TYPE_I8) {
       wrap = "int8";
@@ -2980,13 +2978,11 @@ void t_go_generator::generate_deserialize_container(ofstream& out,
     out << indent() << "tMap := make(" << type_to_go_type(orig_type) << ", size)" << endl;
     out << indent() << prefix << eq << " " << (pointer_field ? "&" : "") << "tMap" << endl;
   } else if (ttype->is_set()) {
-    t_set* t = (t_set*)ttype;
     out << indent() << "_, size, err := iprot.ReadSetBegin()" << endl;
     out << indent() << "if err != nil {" << endl;
     out << indent() << "  return thrift.PrependError(\"error reading set begin: \", err)" << endl;
     out << indent() << "}" << endl;
-    out << indent() << "tSet := make(map["
-        << type_to_go_key_type(t->get_elem_type()->get_true_type()) << "]struct{}, size)" << endl;
+    out << indent() << "tSet := make(" << type_to_go_type(orig_type) << ", 0, size)" << endl;
     out << indent() << prefix << eq << " " << (pointer_field ? "&" : "") << "tSet" << endl;
   } else if (ttype->is_list()) {
     out << indent() << "_, size, err := iprot.ReadListBegin()" << endl;
@@ -3064,8 +3060,8 @@ void t_go_generator::generate_deserialize_set_element(ofstream& out,
   string elem = tmp("_elem");
   t_field felem(tset->get_elem_type(), elem);
   felem.set_req(t_field::T_OPT_IN_REQ_OUT);
-  generate_deserialize_field(out, &felem, true, "", false, false, false, true, true);
-  indent(out) << prefix << "[" << elem << "] = struct{}{}" << endl;
+  generate_deserialize_field(out, &felem, true, "", false, false, false, true);
+  indent(out) << prefix << " = append(" << prefix << ", " << elem << ")" << endl;
 }
 
 /**
@@ -3079,7 +3075,7 @@ void t_go_generator::generate_deserialize_list_element(ofstream& out,
   string elem = tmp("_elem");
   t_field felem(((t_list*)tlist)->get_elem_type(), elem);
   felem.set_req(t_field::T_OPT_IN_REQ_OUT);
-  generate_deserialize_field(out, &felem, true, "", false, false, false, true, true);
+  generate_deserialize_field(out, &felem, true, "", false, false, false, true);
   indent(out) << prefix << " = append(" << prefix << ", " << elem << ")" << endl;
 }
 
@@ -3121,7 +3117,7 @@ void t_go_generator::generate_serialize_field(ofstream& out,
         break;
 
       case t_base_type::TYPE_STRING:
-        if (((t_base_type*)type)->is_binary() && !inkey) {
+        if (type->is_binary() && !inkey) {
           out << "WriteBinary(" << name << ")";
         } else {
           out << "WriteString(string(" << name << "))";
@@ -3224,7 +3220,14 @@ void t_go_generator::generate_serialize_container(ofstream& out,
     indent(out) << "}" << endl;
   } else if (ttype->is_set()) {
     t_set* tset = (t_set*)ttype;
-    out << indent() << "for v, _ := range " << prefix << " {" << endl;
+    out << indent() << "for i := 0; i<len(" << prefix << "); i++ {" << endl;
+    out << indent() << "  for j := i+1; j<len(" << prefix << "); j++ {" << endl;
+    out << indent() << "    if reflect.DeepEqual(" << prefix << "[i]," << prefix << "[j]) { " << endl;
+    out << indent() << "      return thrift.PrependError(\"\", fmt.Errorf(\"%T error writing set field: slice is not unique\", " << prefix << "[i]))" << endl;
+    out << indent() << "    }" << endl;
+    out << indent() << "  }" << endl;
+    out << indent() << "}" << endl;
+    out << indent() << "for _, v := range " << prefix << " {" << endl;
     indent_up();
     generate_serialize_set_element(out, tset, "v");
     indent_down();
@@ -3505,7 +3508,7 @@ string t_go_generator::type_to_enum(t_type* type) {
 
     case t_base_type::TYPE_STRING:
       /* this is wrong, binary is still a string type internally
-      if (((t_base_type*)type)->is_binary()) {
+      if (type->is_binary()) {
           return "thrift.BINARY";
       }
       */
@@ -3559,7 +3562,7 @@ string t_go_generator::type_to_go_key_type(t_type* type) {
     throw "Cannot produce a valid type for a Go map key: " + type_to_go_type(type) + " - aborting.";
   }
 
-  if (resolved_type->is_string() && ((t_base_type*)resolved_type)->is_binary())
+  if (resolved_type->is_binary())
     return "string";
 
   return type_to_go_type(type);
@@ -3592,7 +3595,7 @@ string t_go_generator::type_to_go_type_with_opt(t_type* type,
       throw "";
 
     case t_base_type::TYPE_STRING:
-      if (((t_base_type*)type)->is_binary()) {
+      if (type->is_binary()) {
         return maybe_pointer + "[]byte";
       }
 
@@ -3627,8 +3630,8 @@ string t_go_generator::type_to_go_type_with_opt(t_type* type,
     return maybe_pointer + string("map[") + keyType + "]" + valueType;
   } else if (type->is_set()) {
     t_set* t = (t_set*)type;
-    string elemType = type_to_go_key_type(t->get_elem_type());
-    return maybe_pointer + string("map[") + elemType + string("]struct{}");
+    string elemType = type_to_go_type(t->get_elem_type());
+    return maybe_pointer + string("[]") + elemType;
   } else if (type->is_list()) {
     t_list* t = (t_list*)type;
     string elemType = type_to_go_type(t->get_elem_type());
