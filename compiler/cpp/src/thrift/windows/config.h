@@ -53,7 +53,7 @@
 #endif // _MSC_VER
 
 // MSVC10 (2010) or later has stdint.h
-#if _MSC_VER >= 1600
+#if (_MSC_VER >= 1600) || defined(__BORLANDC__)
 #define HAVE_STDINT_H 1
 #endif
 

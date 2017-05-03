@@ -1,7 +1,7 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
     <PropertyGroup>
         <ProjectGuid>{2B454C60-A516-4CD0-BD2C-553581E1EB3B}</ProjectGuid>
-        <ProjectVersion>18.1</ProjectVersion>
+        <ProjectVersion>18.2</ProjectVersion>
         <FrameworkType>None</FrameworkType>
         <Base>True</Base>
         <Config Condition="'$(Config)'==''">Release</Config>
@@ -10,11 +10,6 @@
         <AppType>Console</AppType>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
-        <Base>true</Base>
-    </PropertyGroup>
-    <PropertyGroup Condition="('$(Platform)'=='OSX32' and '$(Base)'=='true') or '$(Base_OSX32)'!=''">
-        <Base_OSX32>true</Base_OSX32>
-        <CfgParent>Base</CfgParent>
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="('$(Platform)'=='Win32' and '$(Base)'=='true') or '$(Base_Win32)'!=''">
@@ -38,15 +33,15 @@
         <Base>true</Base>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base)'!=''">
-        <PreBuildEvent><![CDATA["$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe" -o "$(PROJECTDIR)\src\thriftl.cc" "$(PROJECTDIR)\src\thriftl.ll"
-"$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe" -y -o "$(PROJECTDIR)\src\thrifty.cc" --defines="$(PROJECTDIR)\src\thrifty.hh" "$(PROJECTDIR)\src\thrifty.yy"
+        <PreBuildEvent><![CDATA["$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe" -o "$(PROJECTDIR)\src\thrift\thriftl.cc" "$(PROJECTDIR)\src\thrift\thriftl.ll"
+"$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe" -y -o "$(PROJECTDIR)\src\thrift\thrifty.cc" --defines="$(PROJECTDIR)\src\thrift\thrifty.hh" "$(PROJECTDIR)\src\thrift\thrifty.yy"
 $(PreBuildEvent)]]></PreBuildEvent>
         <RunBCCOutOfProcess>true</RunBCCOutOfProcess>
         <Defines>WIN32;MINGW;YY_NO_UNISTD_H;$(Defines)</Defines>
         <BCC_CPPCompileAlways>true</BCC_CPPCompileAlways>
         <SubProcessesNumber>4</SubProcessesNumber>
-        <IncludePath>src\parse\;src\generate\;src\audit\;src\windows\;src\;$(IncludePath)</IncludePath>
-        <ILINK_LibraryPath>src\parse\;src\generate\;src\audit\;src\windows\;src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+        <IncludePath>src\thrift\;src\thrift\windows\;src\thrift\parse\;src\thrift\generate\;src\thrift\audit\;src\parse\;src\generate\;src\audit\;src\windows\;src\;$(IncludePath)</IncludePath>
+        <ILINK_LibraryPath>src\thrift\;src\thrift\windows\;src\thrift\parse\;src\thrift\generate\;src\thrift\audit\;src\parse\;src\generate\;src\audit\;src\windows\;src\;$(ILINK_LibraryPath)</ILINK_LibraryPath>
         <ProjectType>CppConsoleApplication</ProjectType>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;$(DCC_Namespace)</DCC_Namespace>
@@ -61,11 +56,6 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
         <BCC_ExtendedErrorInfo>true</BCC_ExtendedErrorInfo>
         <ILINK_TranslatedLibraryPath>$(BDSLIB)\$(PLATFORM)\release\$(LANGDIR);$(ILINK_TranslatedLibraryPath)</ILINK_TranslatedLibraryPath>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Base_OSX32)'!=''">
-        <PackageImports>bindcomp;bindcompdbx;bindcompfmx;bindengine;CloudService;CustomIPTransport;dbexpress;dbrtl;dbxcds;DbxClientDriver;DbxCommonDriver;DBXInterBaseDriver;DBXMySQLDriver;DBXSqliteDriver;dsnap;dsnapxml;FireDAC;FireDACASADriver;FireDACCommon;FireDACCommonDriver;FireDACIBDriver;FireDACMySQLDriver;FireDACODBCDriver;FireDACPgDriver;FireDACSqliteDriver;fmx;fmxase;fmxdae;fmxFireDAC;fmxobj;IndyCore;IndyIPClient;IndyIPCommon;IndyIPServer;IndyProtocols;IndySystem;inet;inetdb;inetdbxpress;RESTBackendComponents;RESTComponents;rtl;soapmidas;soaprtl;soapserver;tethering;xmlrtl;$(PackageImports)</PackageImports>
-        <DynamicRTL>true</DynamicRTL>
-        <UsePackages>true</UsePackages>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Base_Win32)'!=''">
         <DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;Bde;$(DCC_Namespace)</DCC_Namespace>
@@ -103,200 +93,209 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <TASM_Debugging>None</TASM_Debugging>
     </PropertyGroup>
     <ItemGroup>
-        <CppCompile Include="src\audit\t_audit.cpp">
-            <BuildOrder>14</BuildOrder>
+        <CppCompile Include="src\thrift\audit\t_audit.cpp">
+            <BuildOrder>67</BuildOrder>
         </CppCompile>
-        <None Include="src\audit\t_audit.h">
-            <BuildOrder>15</BuildOrder>
+        <None Include="src\thrift\audit\t_audit.h">
+            <BuildOrder>68</BuildOrder>
         </None>
-        <CppCompile Include="src\generate\t_as3_generator.cc">
-            <BuildOrder>16</BuildOrder>
+        <CppCompile Include="src\thrift\common.cc">
+            <BuildOrder>68</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_cocoa_generator.cc">
-            <BuildOrder>18</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_cpp_generator.cc">
-            <BuildOrder>19</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_csharp_generator.cc">
-            <BuildOrder>20</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_c_glib_generator.cc">
-            <BuildOrder>17</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_dart_generator.cc">
-            <BuildOrder>64</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_delphi_generator.cc">
-            <BuildOrder>22</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_d_generator.cc">
-            <BuildOrder>21</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_erl_generator.cc">
-            <BuildOrder>23</BuildOrder>
-        </CppCompile>
-        <CppCompile Include="src\generate\t_generator.cc">
-            <BuildOrder>24</BuildOrder>
-        </CppCompile>
-        <None Include="src\generate\t_generator.h">
-            <BuildOrder>64</BuildOrder>
+        <None Include="src\thrift\common.h">
+            <BuildOrder>69</BuildOrder>
         </None>
-        <None Include="src\generate\t_generator_registry.h">
-            <BuildOrder>64</BuildOrder>
-        </None>
-        <CppCompile Include="src\generate\t_go_generator.cc">
-            <BuildOrder>27</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_as3_generator.cc">
+            <BuildOrder>67</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_gv_generator.cc">
-            <BuildOrder>28</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_cocoa_generator.cc">
+            <BuildOrder>69</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_haxe_generator.cc">
-            <BuildOrder>29</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_cpp_generator.cc">
+            <BuildOrder>70</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_hs_generator.cc">
-            <BuildOrder>30</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_csharp_generator.cc">
+            <BuildOrder>71</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_html_generator.cc">
-            <BuildOrder>31</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_c_glib_generator.cc">
+            <BuildOrder>68</BuildOrder>
         </CppCompile>
-        <None Include="src\generate\t_html_generator.h">
-            <BuildOrder>64</BuildOrder>
-        </None>
-        <CppCompile Include="src\generate\t_javame_generator.cc">
-            <BuildOrder>34</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_dart_generator.cc">
+            <BuildOrder>73</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_java_generator.cc">
-            <BuildOrder>33</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_delphi_generator.cc">
+            <BuildOrder>74</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_json_generator.cc">
-            <BuildOrder>36</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_d_generator.cc">
+            <BuildOrder>72</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_js_generator.cc">
-            <BuildOrder>35</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_erl_generator.cc">
+            <BuildOrder>75</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_lua_generator.cc">
-            <BuildOrder>37</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_generator.cc">
+            <BuildOrder>76</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_ocaml_generator.cc">
-            <BuildOrder>38</BuildOrder>
+        <None Include="src\thrift\generate\t_generator.h">
+            <BuildOrder>77</BuildOrder>
+        </None>
+        <None Include="src\thrift\generate\t_generator_registry.h">
+            <BuildOrder>78</BuildOrder>
+        </None>
+        <CppCompile Include="src\thrift\generate\t_go_generator.cc">
+            <BuildOrder>79</BuildOrder>
         </CppCompile>
-        <None Include="src\generate\t_oop_generator.h">
-            <BuildOrder>64</BuildOrder>
-        </None>
-        <CppCompile Include="src\generate\t_perl_generator.cc">
-            <BuildOrder>40</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_gv_generator.cc">
+            <BuildOrder>80</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_php_generator.cc">
-            <BuildOrder>41</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_haxe_generator.cc">
+            <BuildOrder>81</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_py_generator.cc">
-            <BuildOrder>42</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_hs_generator.cc">
+            <BuildOrder>82</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_rb_generator.cc">
-            <BuildOrder>43</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_html_generator.cc">
+            <BuildOrder>83</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_st_generator.cc">
-            <BuildOrder>44</BuildOrder>
+        <None Include="src\thrift\generate\t_html_generator.h">
+            <BuildOrder>84</BuildOrder>
+        </None>
+        <CppCompile Include="src\thrift\generate\t_javame_generator.cc">
+            <BuildOrder>86</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_swift_generator.cc">
-            <BuildOrder>65</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_java_generator.cc">
+            <BuildOrder>85</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_xml_generator.cc">
-            <BuildOrder>66</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_json_generator.cc">
+            <BuildOrder>88</BuildOrder>
         </CppCompile>
-        <CppCompile Include="src\generate\t_xsd_generator.cc">
-            <BuildOrder>45</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_js_generator.cc">
+            <BuildOrder>87</BuildOrder>
         </CppCompile>
-        <None Include="src\globals.h">
-            <BuildOrder>9</BuildOrder>
-        </None>
-        <None Include="src\logging.h">
-            <BuildOrder>10</BuildOrder>
-        </None>
-        <CppCompile Include="src\main.cc">
-            <BuildOrder>11</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_lua_generator.cc">
+            <BuildOrder>89</BuildOrder>
         </CppCompile>
-        <None Include="src\main.h">
-            <BuildOrder>0</BuildOrder>
-        </None>
-        <CppCompile Include="src\parse\parse.cc">
-            <BuildOrder>46</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_netcore_generator.cc">
+            <BuildOrder>90</BuildOrder>
         </CppCompile>
-        <None Include="src\parse\t_base_type.h">
-            <BuildOrder>47</BuildOrder>
-        </None>
-        <None Include="src\parse\t_const.h">
-            <BuildOrder>48</BuildOrder>
-        </None>
-        <None Include="src\parse\t_const_value.h">
-            <BuildOrder>49</BuildOrder>
-        </None>
-        <None Include="src\parse\t_container.h">
-            <BuildOrder>50</BuildOrder>
-        </None>
-        <None Include="src\parse\t_doc.h">
-            <BuildOrder>51</BuildOrder>
-        </None>
-        <None Include="src\parse\t_enum.h">
-            <BuildOrder>52</BuildOrder>
-        </None>
-        <None Include="src\parse\t_enum_value.h">
-            <BuildOrder>53</BuildOrder>
-        </None>
-        <None Include="src\parse\t_field.h">
-            <BuildOrder>54</BuildOrder>
-        </None>
-        <None Include="src\parse\t_function.h">
-            <BuildOrder>55</BuildOrder>
-        </None>
-        <None Include="src\parse\t_list.h">
-            <BuildOrder>56</BuildOrder>
-        </None>
-        <None Include="src\parse\t_map.h">
-            <BuildOrder>57</BuildOrder>
-        </None>
-        <None Include="src\parse\t_program.h">
-            <BuildOrder>58</BuildOrder>
-        </None>
-        <None Include="src\parse\t_scope.h">
-            <BuildOrder>59</BuildOrder>
-        </None>
-        <None Include="src\parse\t_service.h">
-            <BuildOrder>60</BuildOrder>
-        </None>
-        <None Include="src\parse\t_set.h">
-            <BuildOrder>61</BuildOrder>
-        </None>
-        <None Include="src\parse\t_struct.h">
-            <BuildOrder>62</BuildOrder>
-        </None>
-        <None Include="src\parse\t_type.h">
-            <BuildOrder>63</BuildOrder>
-        </None>
-        <CppCompile Include="src\parse\t_typedef.cc">
-            <BuildOrder>64</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_ocaml_generator.cc">
+            <BuildOrder>91</BuildOrder>
         </CppCompile>
-        <None Include="src\parse\t_typedef.h">
-            <BuildOrder>65</BuildOrder>
+        <None Include="src\thrift\generate\t_oop_generator.h">
+            <BuildOrder>92</BuildOrder>
         </None>
-        <None Include="src\platform.h">
-            <BuildOrder>3</BuildOrder>
-        </None>
-        <CppCompile Include="src\thriftl.cc">
-            <BuildOrder>4</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_perl_generator.cc">
+            <BuildOrder>93</BuildOrder>
         </CppCompile>
-        <None Include="src\thriftl.ll"/>
-        <CppCompile Include="src\thrifty.cc">
-            <BuildOrder>6</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_php_generator.cc">
+            <BuildOrder>94</BuildOrder>
         </CppCompile>
-        <None Include="src\thrifty.hh"/>
-        <None Include="src\thrifty.yy"/>
-        <None Include="src\windows\config.h">
-            <BuildOrder>12</BuildOrder>
+        <CppCompile Include="src\thrift\generate\t_py_generator.cc">
+            <BuildOrder>95</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\thrift\generate\t_rb_generator.cc">
+            <BuildOrder>96</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\thrift\generate\t_rs_generator.cc">
+            <BuildOrder>97</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\thrift\generate\t_st_generator.cc">
+            <BuildOrder>98</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\thrift\generate\t_swift_generator.cc">
+            <BuildOrder>99</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\thrift\generate\t_xml_generator.cc">
+            <BuildOrder>100</BuildOrder>
+        </CppCompile>
+        <CppCompile Include="src\thrift\generate\t_xsd_generator.cc">
+            <BuildOrder>101</BuildOrder>
+        </CppCompile>
+        <None Include="src\thrift\globals.h">
+            <BuildOrder>70</BuildOrder>
         </None>
-        <None Include="src\windows\version.h">
-            <BuildOrder>13</BuildOrder>
+        <CppCompile Include="src\thrift\main.cc">
+            <BuildOrder>73</BuildOrder>
+        </CppCompile>
+        <None Include="src\thrift\main.h">
+            <BuildOrder>74</BuildOrder>
+        </None>
+        <CppCompile Include="src\thrift\parse\parse.cc">
+            <BuildOrder>69</BuildOrder>
+        </CppCompile>
+        <None Include="src\thrift\parse\t_base_type.h">
+            <BuildOrder>70</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_const.h">
+            <BuildOrder>71</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_const_value.h">
+            <BuildOrder>72</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_container.h">
+            <BuildOrder>73</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_doc.h">
+            <BuildOrder>74</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_enum.h">
+            <BuildOrder>75</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_enum_value.h">
+            <BuildOrder>76</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_field.h">
+            <BuildOrder>77</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_function.h">
+            <BuildOrder>78</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_list.h">
+            <BuildOrder>79</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_map.h">
+            <BuildOrder>80</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_program.h">
+            <BuildOrder>81</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_scope.h">
+            <BuildOrder>82</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_service.h">
+            <BuildOrder>83</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_set.h">
+            <BuildOrder>84</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_struct.h">
+            <BuildOrder>85</BuildOrder>
+        </None>
+        <None Include="src\thrift\parse\t_type.h">
+            <BuildOrder>86</BuildOrder>
+        </None>
+        <CppCompile Include="src\thrift\parse\t_typedef.cc">
+            <BuildOrder>87</BuildOrder>
+        </CppCompile>
+        <None Include="src\thrift\parse\t_typedef.h">
+            <BuildOrder>88</BuildOrder>
+        </None>
+        <None Include="src\thrift\platform.h">
+            <BuildOrder>75</BuildOrder>
+        </None>
+        <CppCompile Include="src\thrift\thriftl.cc">
+            <BuildOrder>76</BuildOrder>
+        </CppCompile>
+        <None Include="src\thrift\thriftl.ll"/>
+        <CppCompile Include="src\thrift\thrifty.cc">
+            <BuildOrder>78</BuildOrder>
+        </CppCompile>
+        <None Include="src\thrift\thrifty.hh"/>
+        <None Include="src\thrift\thrifty.yy"/>
+        <None Include="src\thrift\version.h">
+            <BuildOrder>81</BuildOrder>
+        </None>
+        <None Include="src\thrift\windows\config.h">
+            <BuildOrder>69</BuildOrder>
         </None>
         <BuildConfiguration Include="Release">
             <Key>Cfg_2</Key>
@@ -322,20 +321,96 @@ $(PreBuildEvent)]]></PreBuildEvent>
                     <ProjectProperties Name="IndexFiles">False</ProjectProperties>
                 </ProjectProperties>
                 <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k230.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp230.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k230.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp230.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcboffice2k250.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\bcbofficexp250.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dcloffice2k250.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+                    <Excluded_Packages Name="$(BDSBIN)\dclofficexp250.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
                 </Excluded_Packages>
             </CPlusPlusBuilder.Personality>
-            <Deployment Version="2">
-                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgcrtl.dylib" Class="DependencyModule">
-                    <Platform Name="OSX32">
+            <Deployment Version="3">
+                <DeployFile LocalName="src\thrift\generate\t_cpp_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32230.dll" Class="DependencyModule">
+                <DeployFile LocalName="src\thrift\generate\t_xsd_generator.cc" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32230.dll" Class="DependencyModule"/>
+                <DeployFile LocalName="src\thrift\generate\t_lua_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_as3_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName=".\Win32\Debug\thrift.exe" Configuration="Debug" Class="ProjectOutput"/>
+                <DeployFile LocalName="src\thrift\generate\t_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\parse\parse.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\parse\t_typedef.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_c_glib_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_erl_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_javame_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_go_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_swift_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_py_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\main.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -344,18 +419,14 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(UsingDelphiRTL)'=='true'" LocalName="$(BDS)\bin64\borlndmm.dll" Class="DependencyModule">
-                    <Platform Name="Win64">
-                        <Overwrite>true</Overwrite>
-                    </Platform>
-                </DeployFile>
                 <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgstl.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32230mt.dll" Class="DependencyModule">
+                <DeployFile LocalName="src\thrift\generate\t_hs_generator.cc" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -364,9 +435,14 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName=".\Win32\Debug\thrift.exe" Configuration="Debug" Class="ProjectOutput">
+                <DeployFile LocalName="$(BDS)\Redist\osx32\libcgsqlite3.dylib" Class="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\thriftl.cc" Configuration="Release" Class="ProjectFile">
                     <Platform Name="Win32">
-                        <RemoteName>thrift.exe</RemoteName>
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -375,8 +451,32 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule">
-                    <Platform Name="iOSSimulator">
+                <DeployFile LocalName="src\thrift\thrifty.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_gv_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_perl_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32250.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_java_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
@@ -386,202 +486,181 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64230mt.dll" Class="DependencyModule">
+                <DeployFile LocalName="src\thrift\generate\t_rb_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64230mt.dll" Class="DependencyModule"/>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin64\cc64250.dll" Class="DependencyModule">
                     <Platform Name="Win64">
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin64\cc64230.dll" Class="DependencyModule">
-                    <Platform Name="Win64">
+                <DeployFile LocalName="src\thrift\thrifty.hh" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
                         <Overwrite>true</Overwrite>
                     </Platform>
                 </DeployFile>
-                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
-                <DeployClass Name="ProjectOSXResource">
+                <DeployFile LocalName="src\thrift\generate\t_rs_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_ocaml_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_delphi_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\thriftl.ll" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_haxe_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\thrifty.yy" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32250mt.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_st_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_cocoa_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_csharp_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="$(BDS)\Redist\iossimulator\libPCRE.dylib" Class="DependencyModule">
+                    <Platform Name="iOSSimulator">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin64\cc64230.dll" Class="DependencyModule"/>
+                <DeployFile LocalName="src\thrift\common.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_php_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32c250mt.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'!='true'" LocalName="$(BDS)\bin\cc32c250.dll" Class="DependencyModule">
+                    <Platform Name="Win32">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true'" LocalName="$(BDS)\Redist\osx32\libcgcrtl.dylib" Class="DependencyModule">
                     <Platform Name="OSX32">
-                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(UsingDelphiRTL)'=='true'" LocalName="$(BDS)\bin64\borlndmm.dll" Class="DependencyModule">
+                    <Platform Name="Win64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_d_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_js_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_xml_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin\cc32230mt.dll" Class="DependencyModule"/>
+                <DeployFile LocalName="src\thrift\generate\t_html_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_json_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile Condition="'$(DynamicRTL)'=='true' And '$(Multithreaded)'=='true'" LocalName="$(BDS)\bin64\cc64250mt.dll" Class="DependencyModule">
+                    <Platform Name="Win64">
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_dart_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployFile LocalName="src\thrift\generate\t_netcore_generator.cc" Configuration="Release" Class="ProjectFile">
+                    <Platform Name="Win32">
+                        <RemoteDir>.\</RemoteDir>
+                        <Overwrite>true</Overwrite>
+                    </Platform>
+                </DeployFile>
+                <DeployClass Name="AdditionalDebugSymbols">
+                    <Platform Name="OSX32">
                         <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <RemoteDir>Contents\MacOS</RemoteDir>
+                        <Operation>0</Operation>
                     </Platform>
                 </DeployClass>
                 <DeployClass Name="AndroidClassesDexFile">
                     <Platform Name="Android">
                         <RemoteDir>classes</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AdditionalDebugSymbols">
-                    <Platform Name="Win32">
-                        <RemoteDir>Contents\MacOS</RemoteDir>
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch768">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="Android_LauncherIcon144">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-xxhdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AndroidLibnativeMipsFile">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\mips</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Required="true" Name="ProjectOutput">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="DependencyFramework">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                        <Extensions>.framework</Extensions>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch640">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch1024">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectiOSDeviceDebug">
-                    <Platform Name="iOSDevice64">
-                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AndroidLibnativeX86File">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\x86</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch320">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectiOSInfoPList"/>
-                <DeployClass Name="AndroidLibnativeArmeabiFile">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="DebugSymbols">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPad_Launch1536">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="Android_SplashImage470">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-normal</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="Android_LauncherIcon96">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-xhdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="Android_SplashImage640">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-large</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="iPhone_Launch640x1136">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectiOSEntitlements"/>
-                <DeployClass Name="Android_LauncherIcon72">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-hdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -591,28 +670,21 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectOSXInfoPList"/>
-                <DeployClass Name="ProjectOSXEntitlements"/>
-                <DeployClass Name="iPad_Launch2048">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
+                <DeployClass Name="AndroidLibnativeArmeabiFile">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="AndroidSplashStyles">
+                <DeployClass Name="AndroidLibnativeMipsFile">
                     <Platform Name="Android">
-                        <RemoteDir>res\values</RemoteDir>
+                        <RemoteDir>library\lib\mips</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="Android_SplashImage426">
+                <DeployClass Name="AndroidServiceOutput">
                     <Platform Name="Android">
-                        <RemoteDir>res\drawable-small</RemoteDir>
+                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -622,19 +694,9 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="ProjectiOSResource">
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="ProjectAndroidManifest">
+                <DeployClass Name="AndroidSplashStyles">
                     <Platform Name="Android">
+                        <RemoteDir>res\values</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -644,63 +706,9 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
-                <DeployClass Name="File">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>0</Operation>
-                    </Platform>
+                <DeployClass Name="Android_LauncherIcon144">
                     <Platform Name="Android">
-                        <Operation>0</Operation>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>0</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="AndroidServiceOutput">
-                    <Platform Name="Android">
-                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Required="true" Name="DependencyPackage">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                        <Extensions>.bpl</Extensions>
-                    </Platform>
-                    <Platform Name="iOSDevice64">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="OSX32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSDevice32">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                    <Platform Name="iOSSimulator">
-                        <Operation>1</Operation>
-                        <Extensions>.dylib</Extensions>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="Android_LauncherIcon48">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-mdpi</RemoteDir>
-                        <Operation>1</Operation>
-                    </Platform>
-                </DeployClass>
-                <DeployClass Name="Android_SplashImage960">
-                    <Platform Name="Android">
-                        <RemoteDir>res\drawable-xlarge</RemoteDir>
+                        <RemoteDir>res\drawable-xxhdpi</RemoteDir>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
@@ -710,26 +718,296 @@ $(PreBuildEvent)]]></PreBuildEvent>
                         <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
+                <DeployClass Name="Android_LauncherIcon48">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-mdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon72">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-hdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_LauncherIcon96">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xhdpi</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage426">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-small</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage470">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-normal</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage640">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-large</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="Android_SplashImage960">
+                    <Platform Name="Android">
+                        <RemoteDir>res\drawable-xlarge</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DebugSymbols">
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="DependencyFramework">
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.framework</Extensions>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
                 <DeployClass Name="DependencyModule">
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
                     <Platform Name="Win32">
                         <Operation>0</Operation>
                         <Extensions>.dll;.bpl</Extensions>
                     </Platform>
+                </DeployClass>
+                <DeployClass Required="true" Name="DependencyPackage">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                        <Extensions>.dylib</Extensions>
+                    </Platform>
                     <Platform Name="OSX32">
                         <Operation>1</Operation>
                         <Extensions>.dylib</Extensions>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                        <Extensions>.bpl</Extensions>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="File">
+                    <Platform Name="Android">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch1024">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch1536">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch2048">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPad_Launch768">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch320">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch640">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="iPhone_Launch640x1136">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectAndroidManifest">
+                    <Platform Name="Android">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceDebug">
+                    <Platform Name="iOSDevice32">
+                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <RemoteDir>..\$(PROJECTNAME).app.dSYM\Contents\Resources\DWARF</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectiOSDeviceResourceRules"/>
+                <DeployClass Name="ProjectiOSEntitlements"/>
+                <DeployClass Name="ProjectiOSInfoPList"/>
+                <DeployClass Name="ProjectiOSResource">
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectOSXEntitlements"/>
+                <DeployClass Name="ProjectOSXInfoPList"/>
+                <DeployClass Name="ProjectOSXResource">
+                    <Platform Name="OSX32">
+                        <RemoteDir>Contents\Resources</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Required="true" Name="ProjectOutput">
+                    <Platform Name="Android">
+                        <RemoteDir>library\lib\armeabi-v7a</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSDevice64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="iOSSimulator">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Linux64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="ProjectUWPManifest">
+                    <Platform Name="Win32">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="UWP_CppLogo150">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                </DeployClass>
+                <DeployClass Name="UWP_CppLogo44">
+                    <Platform Name="Win32">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="Win64">
+                        <RemoteDir>Assets</RemoteDir>
+                        <Operation>1</Operation>
                     </Platform>
                 </DeployClass>
                 <ProjectRoot Platform="iOSDevice64" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>
             </Deployment>
             <Platforms>
-                <Platform value="OSX32">False</Platform>
                 <Platform value="Win32">True</Platform>
                 <Platform value="Win64">True</Platform>
             </Platforms>
@@ -739,16 +1017,8 @@ $(PreBuildEvent)]]></PreBuildEvent>
     <Import Project="$(BDS)\Bin\CodeGear.Cpp.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Cpp.Targets')"/>
     <Import Project="$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj" Condition="Exists('$(APPDATA)\Embarcadero\$(BDSAPPDATABASEDIR)\$(PRODUCTVERSION)\UserTools.proj')"/>
     <Import Project="$(MSBuildProjectName).deployproj" Condition="Exists('$(MSBuildProjectName).deployproj')"/>
-    <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='OSX32'">
-        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrifty.yy&quot;</PreBuildEvent>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent/>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrifty.yy&quot;</PreBuildEvent>
+        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thrift\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thrift\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrift\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrift\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrift\thrifty.yy&quot;</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -756,15 +1026,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Debug' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrifty.yy&quot;</PreBuildEvent>
-        <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
-        <PreLinkEvent/>
-        <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
-        <PostBuildEvent/>
-        <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='OSX32'">
-        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrifty.yy&quot;</PreBuildEvent>
+        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thrift\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thrift\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrift\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrift\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrift\thrifty.yy&quot;</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -772,7 +1034,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win32'">
-        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrifty.yy&quot;</PreBuildEvent>
+        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thrift\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thrift\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrift\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrift\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrift\thrifty.yy&quot;</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
@@ -780,7 +1042,7 @@ $(PreBuildEvent)]]></PreBuildEvent>
         <PostBuildEventIgnoreExitCode>False</PostBuildEventIgnoreExitCode>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Config)'=='Release' And '$(Platform)'=='Win64'">
-        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrifty.yy&quot;</PreBuildEvent>
+        <PreBuildEvent>&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_flex.exe&quot; -o &quot;$(PROJECTDIR)\src\thrift\thriftl.cc&quot; &quot;$(PROJECTDIR)\src\thrift\thriftl.ll&quot;&amp;&amp;&quot;$(PROJECTDIR)\..\..\contrib\win_flex_bison\win_bison.exe&quot; -y -o &quot;$(PROJECTDIR)\src\thrift\thrifty.cc&quot; --defines=&quot;$(PROJECTDIR)\src\thrift\thrifty.hh&quot; &quot;$(PROJECTDIR)\src\thrift\thrifty.yy&quot;</PreBuildEvent>
         <PreBuildEventIgnoreExitCode>False</PreBuildEventIgnoreExitCode>
         <PreLinkEvent/>
         <PreLinkEventIgnoreExitCode>False</PreLinkEventIgnoreExitCode>
